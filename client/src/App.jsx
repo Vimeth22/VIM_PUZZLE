@@ -56,6 +56,9 @@ function App() {
   const [playerName, setPlayerName] = useState('Player');
   const [leaderboard, setLeaderboard] = useState([]);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginForm, setLoginForm] = useState({ username: '', password: '' });
+  const [loginError, setLoginError] = useState('');
 
   const emptyIndex = board.indexOf(EMPTY_TILE);
 
@@ -73,13 +76,13 @@ function App() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      if (isPlaying) {
+      if (isPlaying && isLoggedIn) {
         setSeconds((prev) => prev + 1);
       }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isPlaying]);
+  }, [isPlaying, isLoggedIn]);
 
   useEffect(() => {
     const fetchScores = async () => {
@@ -96,7 +99,13 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!isSolved(board)) return;
+    if (!isLoggedIn) {
+      setShowCelebration(false);
+    }
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    if (!isLoggedIn || !isSolved(board)) return;
 
     setIsPlaying(false);
     setShowCelebration(true);
@@ -123,10 +132,10 @@ function App() {
     };
 
     saveScore();
-  }, [board, moves, seconds, playerName]);
+  }, [board, moves, seconds, playerName, isLoggedIn]);
 
   const handleTileClick = (index) => {
-    if (!isPlaying) return;
+    if (!isPlaying || !isLoggedIn) return;
 
     const neighbors = getMovableIndices(emptyIndex, board);
     if (!neighbors.includes(index)) return;
@@ -146,7 +155,71 @@ function App() {
     setShowCelebration(false);
   };
 
+  const handleLogin = (event) => {
+    event.preventDefault();
+
+    if (!loginForm.username.trim() || !loginForm.password.trim()) {
+      setLoginError('Please enter a username and password.');
+      return;
+    }
+
+    setPlayerName(loginForm.username.trim());
+    setLoginError('');
+    setIsLoggedIn(true);
+    resetGame();
+  };
+
+  const handleQuit = () => {
+    setIsLoggedIn(false);
+    setLoginForm({ username: '', password: '' });
+    setLoginError('');
+    setBoard(createShuffledBoard());
+    setMoves(0);
+    setSeconds(0);
+    setIsPlaying(true);
+    setShowCelebration(false);
+  };
+
   const isWinning = isSolved(board);
+
+  if (!isLoggedIn) {
+    return (
+      <div className="auth-shell">
+        <div className="login-card">
+          <div className="login-header">
+            <span className="login-badge">VIM PUZZLE</span>
+            <h1>Welcome</h1>
+          </div>
+
+          <form className="login-form" onSubmit={handleLogin}>
+            <label>
+              <span>Username</span>
+              <input
+                type="text"
+                value={loginForm.username}
+                onChange={(event) => setLoginForm({ ...loginForm, username: event.target.value })}
+                placeholder="Enter username"
+              />
+            </label>
+
+            <label>
+              <span>Password</span>
+              <input
+                type="password"
+                value={loginForm.password}
+                onChange={(event) => setLoginForm({ ...loginForm, password: event.target.value })}
+                placeholder="Enter password"
+              />
+            </label>
+
+            {loginError && <p className="error-text">{loginError}</p>}
+
+            <button type="submit" className="login-btn">Login</button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="vim-app">
@@ -154,7 +227,10 @@ function App() {
         <div className="game-panel">
           <div className="topbar">
             <div className="mini-label">VIM PUZZLE</div>
-            <button className="secondary-btn" onClick={resetGame}>New Game</button>
+            <div className="top-actions">
+              <button className="secondary-btn" onClick={resetGame}>New Game</button>
+              <button className="quit-btn" onClick={handleQuit}>Quit</button>
+            </div>
           </div>
 
           <div className="title-wrap">
