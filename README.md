@@ -4,7 +4,7 @@ A full-stack sliding puzzle game built with:
 
 - **Frontend:** React + Vite
 - **Backend:** Node.js + Express
-- **Database:** MongoDB (optional, falls back to in-memory scores)
+- **Database:** MongoDB 
 
 This project includes:
 - Login screen before entering the game
@@ -232,7 +232,7 @@ npm run dev
 - Empty tile can be moved by clicking adjacent tiles
 - On solve:
   - Big **CONGRATULATIONS!** overlay appears
-  - Emoji rain animation plays
+  - Emoji rain animation plays (Still working on this one)
   - Score is posted to leaderboard
 
 ---
