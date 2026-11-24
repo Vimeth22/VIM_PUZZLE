@@ -3,9 +3,17 @@ client/node_modules/
 server/node_modules/
 .env
 .env.*
+!.env.example
 .DS_Store
 npm-debug.log*
 .vite/
 dist/
 coverage/
 .git/
+
+# Local development settings
+.vscode/
+
+# Backup files
+*.backup.css
+*.backup.jsx

@@ -1,459 +1,1524 @@
+
+/* ========================================
+   VIM PUZZLE - PREMIUM GAMING EDITION
+======================================== */
+
+
+/* ========================================
+   1. GLOBAL STYLES
+======================================== */
+
 :root {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #f5f7ff;
-  background: #07192a;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  color: #eaf5ff;
+  background: #031221;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  color-scheme: dark;
 }
 
 * {
   box-sizing: border-box;
 }
 
-html, body, #root {
-  margin: 0;
-  min-height: 100%;
-  height: 100%;
-}
-
-body {
-  min-height: 100vh;
-  background:
-    radial-gradient(circle at center, rgba(57, 175, 255, 0.16), transparent 28%),
-    linear-gradient(135deg, #020d1e 0%, #06192c 35%, #020d1e 100%);
-}
-
-button, input {
+button,
+input,
+select {
   font: inherit;
 }
 
-.vim-app {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 24px 28px;
-  background: radial-gradient(circle at center, rgba(58, 125, 255, 0.15), transparent 28%), linear-gradient(135deg, #020d1d 0%, #091d2f 30%, #020d1d 100%);
+button {
+  cursor: pointer;
 }
 
-.game-shell {
+button:disabled {
+  cursor: default;
+  opacity: 0.65;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid #67e8f9;
+  outline-offset: 3px;
+}
+
+
+/* ========================================
+   2. APPLICATION BACKGROUND
+======================================== */
+
+.vim-app,
+.auth-shell {
+  min-height: 100vh;
+  width: 100%;
+  padding: 24px;
+
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  gap: 28px;
-  width: min(1280px, 100%);
+
+  background:
+    radial-gradient(
+      ellipse at 0% 0%,
+      #07518a80,
+      transparent 36%
+    ),
+    radial-gradient(
+      ellipse at 100% 100%,
+      #173fa080,
+      transparent 40%
+    ),
+    linear-gradient(
+      145deg,
+      #03101f,
+      #06263c 52%,
+      #020d20
+    );
+
+  position: relative;
+}
+
+
+/* ========================================
+   3. MAIN DASHBOARD LAYOUT
+======================================== */
+
+.game-shell {
+  width: 100%;
+  max-width: 1560px;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.65fr)
+    minmax(0, 1fr);
+
+  gap: 24px;
+  align-items: start;
+  margin: 0 auto;
+}
+
+.glass {
+  background: linear-gradient(
+    145deg,
+    #0b2b43e8,
+    #031625f5
+  );
+
+  border: 1px solid #1689b8;
+  border-radius: 22px;
+
+  box-shadow:
+    inset 0 0 24px #16b7ff12,
+    0 16px 40px #0005;
 }
 
 .game-panel {
-  width: min(760px, 100%);
-  background: rgba(12, 25, 40, 0.84);
-  border: 1px solid rgba(148, 163, 184, 0.28);
-  border-radius: 26px;
-  padding: 26px 22px 18px;
-  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.3);
+  padding: 24px;
+  min-width: 0;
 }
 
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
 
-.mini-label {
-  color: #cbd5e1;
-  font-size: 0.9rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  opacity: 0.9;
-}
+/* ========================================
+   4. TOP NAVIGATION
+======================================== */
 
-.secondary-btn {
-  border: none;
-  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-  color: white;
-  font-weight: 800;
-  border-radius: 12px;
-  padding: 12px 18px;
-  box-shadow: 0 10px 20px rgba(124, 58, 237, 0.35);
-  cursor: pointer;
-}
-
-.title-wrap {
-  position: relative;
-  margin: 0 0 12px;
-}
-
-.hero-title {
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  line-height: 0.78;
-  letter-spacing: -0.08em;
-  font-weight: 900;
-  text-transform: uppercase;
-  transform: skewX(-6deg);
-}
-
-.title-top,
-.title-bottom {
-  display: block;
-  font-size: clamp(3.2rem, 4vw, 6rem);
-  background: linear-gradient(180deg, #f9f8ff 0%, #f4cc54 22%, #ef8d2a 52%, #f9d86f 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  text-shadow: 0 0 18px rgba(255, 210, 96, 0.7);
-}
-
-.crown {
-  position: absolute;
-  top: -28px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 3.8rem;
-  filter: drop-shadow(0 0 16px rgba(255, 196, 0, 0.8));
-}
-
-.divider {
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(250, 204, 21, 1), transparent);
-  margin: 18px 0 20px;
-}
-
-.stats-row {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-.stat-box {
-  background: rgba(22, 38, 56, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  border-radius: 16px;
-  min-height: 86px;
-  padding: 16px 12px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.stat-box span {
-  color: rgba(226, 232, 240, 0.72);
-  font-size: 0.95rem;
-}
-
-.stat-box strong {
-  margin-top: 6px;
-  font-size: clamp(1.6rem, 2vw, 2.1rem);
-  color: white;
-}
-
-.status-box {
-  background: rgba(16, 44, 74, 0.9);
-}
-
-.name-input {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 18px;
-}
-
-.name-input span {
-  color: rgba(226, 232, 240, 0.76);
-  font-size: 0.9rem;
-}
-
-.name-input input {
-  background: rgba(15, 27, 42, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  border-radius: 12px;
-  color: white;
-  padding: 14px 16px;
-  font-size: 1.1rem;
-}
-
-.board-wrapper {
-  position: relative;
-  background: rgba(14, 30, 48, 0.82);
-  border: 2px solid rgba(96, 165, 250, 0.9);
-  border-radius: 24px;
-  padding: 18px;
-  box-shadow: 0 0 0 4px rgba(62, 135, 255, 0.18), 0 0 22px rgba(59, 130, 246, 0.24);
-}
-
-.board {
-  display: grid;
-  gap: 12px;
-  padding: 8px;
-}
-
-.tile {
-  border: none;
-  border-radius: 16px;
-  aspect-ratio: 1;
-  background: linear-gradient(180deg, #f7f8ff, #dfe7f7);
-  box-shadow: inset 0 -8px 0 rgba(15, 23, 42, 0.08), 0 8px 16px rgba(190, 207, 238, 0.15);
-  color: #13243f;
-  font-size: clamp(1.8rem, 2vw, 2.8rem);
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.tile:hover:not(:disabled) {
-  transform: translateY(-1px);
-}
-
-.tile.empty {
-  background: rgba(148, 163, 184, 0.18);
-  box-shadow: inset 0 0 0 2px rgba(148, 163, 184, 0.18);
-}
-
-.congrats-box {
-  position: relative;
-  z-index: 1;
-  padding: 18px 28px;
-  border-radius: 18px;
-  background: rgba(10, 18, 30, 0.7);
-  border: 2px solid rgba(250, 204, 21, 0.8);
-  box-shadow: 0 0 28px rgba(250, 204, 21, 0.5);
-  color: #fdf0ac;
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  font-size: clamp(1.2rem, 1.6vw, 2.2rem);
-  text-transform: uppercase;
-  text-align: center;
-}
-
-.side-panel {
-  width: min(420px, 100%);
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-}
-
-.image-card {
-  position: relative;
-  min-height: 420px;
-  background: rgba(14, 30, 48, 0.82);
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 18px 40px rgba(2, 6, 23, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.visual-art {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.leaderboard-panel {
-  background: rgba(12, 25, 40, 0.88);
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  border-radius: 22px;
-  padding: 20px 18px;
-  min-height: 180px;
-}
-
-.leaderboard-panel h2 {
-  margin: 0 0 18px;
-  font-size: clamp(2rem, 2vw, 2.6rem);
-  color: #f8fafc;
-}
-
-.leaderboard-panel ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.leaderboard-panel li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  background: rgba(30, 41, 59, 0.7);
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  border-radius: 12px;
-  padding: 12px 14px;
-}
-
-.leaderboard-panel li span,
-.leaderboard-panel li strong {
-  font-size: 1rem;
-}
-
-.leaderboard-panel li strong {
-  color: #c4b5fd;
-}
-
-.empty-state {
-  justify-content: center !important;
-  color: #cbd5e1;
-}
-
-.floating-pieces {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-}
-
-.floating-piece {
-  position: absolute;
-  width: 72px;
-  height: 72px;
-  border-radius: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(147, 197, 253, 0.12);
-  border: 2px solid rgba(147, 197, 253, 0.8);
-  color: #dbeafe;
-  font-size: 2.2rem;
-  font-weight: 900;
-  box-shadow: 0 0 18px rgba(59, 130, 246, 0.28);
-}
-
-.piece-one { top: 42%; left: 10%; }
-.piece-two { top: 28%; right: 10%; }
-
+.topbar,
 .top-actions {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.quit-btn {
-  border: 1px solid rgba(248, 113, 113, 0.7);
-  background: rgba(127, 29, 29, 0.4);
-  color: #fecaca;
-  border-radius: 12px;
-  padding: 10px 16px;
-  font-weight: 700;
-  cursor: pointer;
+.topbar {
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
+.mini-label {
+  letter-spacing: 0.25em;
+  font-size: 0.85rem;
+  color: #b9d2e6;
+}
+
+
+/* ========================================
+   5. BUTTON STYLES
+======================================== */
+
+.secondary-btn,
+.quit-btn,
+.gold-btn,
+.edit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+  border-radius: 12px;
+  padding: 10px 16px;
+
+  font-weight: 700;
+  color: #ffffff;
+
+  border: 1px solid #a58aff;
+
+  background: linear-gradient(
+    135deg,
+    #9165ff,
+    #5429db
+  );
+
+  box-shadow: 0 0 16px #845bff44;
+
+  transition:
+    filter 0.2s,
+    transform 0.2s;
+}
+
+.secondary-btn:hover,
+.quit-btn:hover,
+.gold-btn:hover,
+.edit-btn:hover {
+  filter: brightness(1.2);
+  transform: translateY(-1px);
+}
+
+button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.quit-btn {
+  background: #471b29;
+  border-color: #f05c70;
+  box-shadow: none;
+}
+
+
+/* ========================================
+   6. PREMIUM VIM PUZZLE LOGO
+======================================== */
+
+.title-wrap {
+  margin: 0 auto 22px;
+  text-align: center;
+}
+
+.crown {
+  font-size: 3.3rem;
+  line-height: 1;
+
+  filter: drop-shadow(
+    0 0 12px #ffc936
+  );
+}
+
+.hero-title {
+  margin: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  font-size: clamp(2.8rem, 5vw, 5.5rem);
+  font-weight: 950;
+  line-height: 0.85;
+  font-style: italic;
+  letter-spacing: -0.055em;
+
+  color: #ffd35b;
+
+  filter: drop-shadow(
+    0 0 9px #f6a62366
+  );
+}
+
+.hero-title span {
+  background: linear-gradient(
+    #fff7b9,
+    #ffcf46 45%,
+    #e88b09 70%,
+    #ffe89b
+  );
+
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.title-wrap p {
+  letter-spacing: 0.3em;
+  font-size: 0.8rem;
+  margin: 14px 0 0;
+  font-weight: 700;
+}
+
+
+/* ========================================
+   7. GAME STATISTICS
+======================================== */
+
+.stats-row,
+.personal-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.stat-box {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+  padding: 14px 8px;
+
+  background: linear-gradient(
+    145deg,
+    #103b58,
+    #082239
+  );
+
+  border: 1px solid #176a91;
+  border-radius: 13px;
+
+  box-shadow: inset 0 0 12px #00bfff15;
+}
+
+.stat-box > svg {
+  color: #21cfff;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+.stat-box span,
+.stat-box strong {
+  display: block;
+}
+
+.stat-box span {
+  font-size: 0.8rem;
+  color: #b9d2e6;
+}
+
+.stat-box strong {
+  font-size: clamp(1rem, 2.2vw, 2rem);
+  margin-top: 3px;
+  overflow-wrap: anywhere;
+}
+
+.status-box strong {
+  color: #52f6a0;
+}
+
+
+/* ========================================
+   8. PLAYER AND DIFFICULTY CONTROLS
+======================================== */
+
+.game-controls {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+
+  gap: 12px;
+  margin: 18px 0 24px;
+}
+
+.game-controls label {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+  padding: 8px;
+
+  background: #0c2b42;
+  border: 1px solid #1b5876;
+  border-radius: 12px;
+
+  font-size: 0.8rem;
+  min-width: 0;
+}
+
+.game-controls svg {
+  width: 20px;
+  color: #56cfff;
+  flex-shrink: 0;
+}
+
+.game-controls span {
+  white-space: nowrap;
+}
+
+.game-controls input,
+.game-controls select,
+.login-form input {
+  min-width: 0;
+  width: 100%;
+
+  background: #082034;
+  color: #eef8ff;
+
+  border: 1px solid #377798;
+  border-radius: 8px;
+
+  padding: 9px;
+}
+
+
+/* ========================================
+   9. PUZZLE PLAY AREA
+======================================== */
+
+.play-area {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.8fr)
+    minmax(0, 1fr);
+
+  gap: 18px;
+  align-items: stretch;
+}
+
+
+/* ========================================
+   10. NEON PUZZLE BOARD
+======================================== */
+
+.board-wrapper {
+  padding: 16px;
+
+  background: #06253d;
+  border: 2px solid #65f6ff;
+  border-radius: 22px;
+
+  box-shadow:
+    0 0 10px #00dfff,
+    0 0 26px #00cfff77,
+    inset 0 0 16px #00dfff44;
+
+  align-self: start;
+}
+
+.board {
+  display: grid;
+  gap: 9px;
+}
+
+
+/* ========================================
+   11. PUZZLE TILES
+======================================== */
+
+.tile {
+  aspect-ratio: 1;
+  width: 100%;
+  min-width: 0;
+
+  padding: 0;
+
+  border: 1px solid #f1faff;
+  border-radius: 13px;
+
+  background: linear-gradient(
+    #f5f9ff,
+    #c9ddec
+  );
+
+  box-shadow:
+    inset 0 -5px #94b9d1,
+    0 4px 8px #0005;
+
+  color: #071c2f;
+  font-weight: 900;
+  font-size: clamp(1rem, 2.5vw, 2.5rem);
+
+  transition:
+    transform 0.15s,
+    filter 0.15s;
+}
+
+.tile:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.tile.empty {
+  background: #103c58;
+  border-color: #3689b4;
+
+  box-shadow:
+    inset 0 0 12px #40bfff22;
+
+  opacity: 1;
+}
+
+.tile:disabled:not(.empty) {
+  opacity: 1;
+}
+
+
+/* ========================================
+   12. VICTORY AND CHALLENGE CARD
+======================================== */
+
+.victory-card {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+  padding: 16px 10px;
+
+  border: 1px solid #297b97;
+  border-radius: 18px;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 20%,
+      #9c6a222c,
+      transparent 60%
+    ),
+    #082235;
+}
+
+.big-trophy {
+  width: clamp(48px, 7vw, 100px);
+  height: auto;
+
+  color: #ffd04a;
+
+  filter: drop-shadow(
+    0 0 14px #ffbf0066
+  );
+}
+
+.victory-card h2 {
+  font-size: clamp(0.9rem, 1.5vw, 1.3rem);
+  color: #ffda68;
+  margin: 0;
+}
+
+.victory-card p {
+  font-size: 0.85rem;
+  color: #d1e2ee;
+  margin: 0 0 6px;
+}
+
+.victory-card.won {
+  border-color: #ffcf4a;
+  box-shadow: 0 0 20px #ffcc0033;
+}
+
+
+/* ========================================
+   13. GAME COMPLETION RESULTS
+======================================== */
+
+.result-line {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+  width: 100%;
+  padding: 8px;
+
+  background: #061c2c;
+  border-radius: 8px;
+
+  font-size: 0.8rem;
+}
+
+.result-line svg {
+  width: 16px;
+  color: #ffcf4a;
+}
+
+.result-line strong {
+  margin-left: auto;
+}
+
+.gold-btn {
+  background: #49350e;
+  border-color: #ffd54a;
+  color: #ffe27d;
+
+  box-shadow: 0 0 12px #ffcf4a55;
+
+  width: 100%;
+  font-size: 0.85rem;
+  padding: 10px 5px;
+}
+
+
+/* ========================================
+   14. RIGHT SIDEBAR
+======================================== */
+
+.side-panel {
+  display: flex;
+  flex-direction: column;
+
+  gap: 16px;
+  min-width: 0;
+}
+
+
+/* ========================================
+   15. VIM PUZZLE COVER IMAGE
+======================================== */
+
+.image-card {
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  overflow: hidden;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 22px;
+  border: 1px solid #1689b8;
+  background: #03172c;
+
+  box-shadow: 0 0 20px rgba(0, 191, 255, 0.15);
+}
+
+.image-card img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: center;
+
+  display: block;
+}
+
+/* ========================================
+   16. PLAYER PROFILE AND LEADERBOARD
+======================================== */
+
+.profile-panel,
+.leaderboard-panel {
+  padding: 18px;
+  min-width: 0;
+  text-align: left;
+}
+
+.profile-panel h2,
+.leaderboard-panel h2 {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+  margin: 0 0 14px;
+
+  font-size: 1.25rem;
+
+  padding-bottom: 10px;
+  border-bottom: 1px solid #24516a;
+}
+
+.profile-panel h2 svg {
+  color: #36d5ff;
+}
+
+.leaderboard-panel h2 svg {
+  color: #ffd54a;
+}
+
+
+/* ========================================
+   17. PLAYER AVATAR AND INFORMATION
+======================================== */
+
+.profile-main {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.avatar {
+  width: 62px;
+  height: 62px;
+
+  display: grid;
+  place-items: center;
+
+  border: 2px solid #5beaff;
+  border-radius: 50%;
+
+  box-shadow: 0 0 12px #00dfff;
+  background: #0c3a55;
+
+  flex-shrink: 0;
+}
+
+.avatar svg {
+  width: 32px;
+  height: 32px;
+  color: #91eaff;
+}
+
+.profile-name {
+  min-width: 0;
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.profile-name strong,
+.profile-name small {
+  display: block;
+}
+
+.profile-name strong {
+  font-size: 1.3rem;
+}
+
+.profile-name small,
+.note {
+  color: #a8c4d8;
+  font-size: 0.75rem;
+}
+
+.edit-btn {
+  background: #17354d;
+  border-color: #3d6581;
+
+  box-shadow: none;
+
+  padding: 6px 10px;
+  font-size: 0.8rem;
+}
+
+
+/* ========================================
+   18. PERSONAL PERFORMANCE STATISTICS
+======================================== */
+
+.personal-stats {
+  gap: 8px;
+}
+
+.personal-stats .stat-box {
+  gap: 6px;
+  padding: 10px 5px;
+}
+
+.personal-stats .stat-box svg {
+  width: 20px;
+  height: 20px;
+}
+
+.personal-stats .stat-box strong {
+  font-size: 1.15rem;
+}
+
+.personal-stats .stat-box span {
+  font-size: 0.65rem;
+}
+
+.personal-stats .stat-box:first-child svg {
+  color: #ffd54a;
+}
+
+.personal-stats .stat-box:last-child svg {
+  color: #a78bfa;
+}
+
+.note {
+  display: block;
+  margin-top: 10px;
+}
+
+
+/* ========================================
+   19. LEADERBOARD RANKINGS
+======================================== */
+
+.leaderboard-panel h2 small {
+  margin-left: auto;
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: #b8d3e5;
+}
+
+.ranking-scroll {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  padding: 10px 6px;
+  border-bottom: 1px solid #20435a;
+  text-align: left;
+}
+
+th {
+  color: #abc8dd;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+td:nth-child(2) {
+  overflow-wrap: anywhere;
+}
+
+tr.current-player {
+  background: #0d5276;
+  color: #ffffff;
+}
+
+
+/* ========================================
+   PREMIUM LOGIN PAGE - LOGO FIX
+======================================== */
+
 .auth-shell {
+  width: 100%;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: radial-gradient(circle at center, rgba(59, 130, 246, 0.2), transparent 30%), linear-gradient(135deg, #020d1d 0%, #091d2f 30%, #020d1d 100%);
 }
 
 .login-card {
-  width: min(500px, 100%);
-  background: rgba(12, 25, 40, 0.85);
-  border: 1px solid rgba(148, 163, 184, 0.25);
+  width: min(520px, 100%);
+  min-width: 0;
+  padding: 36px;
+  overflow: hidden;
+
+  border: 1px solid #1689b8;
   border-radius: 28px;
-  padding: 32px 28px;
-  box-shadow: 0 25px 60px rgba(2, 6, 23, 0.45);
+
+  background: linear-gradient(
+    145deg,
+    #0b2b43,
+    #061b2c
+  );
+
+  box-shadow:
+    0 0 35px rgba(0, 191, 255, 0.12),
+    0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
-.login-header {
-  text-align: center;
-  margin-bottom: 28px;
+.login-card .login-logo {
+  display: block;
+  width: 100%;
+  max-width: 350px;
+  max-height: 240px;
+  height: auto;
+  object-fit: contain;
+  margin: 0 auto 20px;
+
+  filter: drop-shadow(
+    0 0 18px rgba(255, 193, 7, 0.25)
+  );
 }
 
-.login-badge {
-  display: inline-block;
-  margin-bottom: 12px;
-  padding: 8px 16px;
-  border-radius: 999px;
-  border: 1px solid rgba(96, 165, 250, 0.8);
-  background: rgba(59, 130, 246, 0.12);
-  color: #dbeafe;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  font-size: 0.72rem;
+/* Login subtitle */
+
+.login-subtitle {
+  color: #c5d9eb;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  margin: 0 0 24px;
 }
 
-.login-header h1 {
-  margin: 0;
-  font-size: clamp(2.2rem, 4vw, 3.2rem);
-  color: #f8fafc;
+/* Mobile responsive layout */
+
+@media (max-width: 520px) {
+  .auth-shell {
+    padding: 16px;
+  }
+
+  .login-card {
+    padding: 24px;
+  }
+
+  .login-card .login-logo {
+    max-width: 220px;
+    max-height: 160px;
+  }
 }
 
 .login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+  display: grid;
+  gap: 16px;
+  margin: 24px 0;
 }
 
 .login-form label {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  color: rgba(226, 232, 240, 0.8);
-}
+  text-align: left;
 
-.login-form input {
-  width: 100%;
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  border-radius: 12px;
-  background: rgba(15, 27, 42, 0.9);
-  color: white;
-  padding: 14px 16px;
-  font-size: 1rem;
+  display: grid;
+  gap: 8px;
 }
 
 .error-text {
-  margin: 0;
-  color: #fca5a5;
-  font-size: 0.9rem;
+  color: #ff9ca8;
 }
 
-.login-btn {
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #60a5fa, #3b82f6);
-  color: white;
-  font-weight: 800;
-  padding: 14px 18px;
-  cursor: pointer;
-  box-shadow: 0 12px 25px rgba(59, 130, 246, 0.35);
+.login-card small {
+  color: #abc8dd;
 }
 
-@media (max-width: 980px) {
-  .game-shell {
+
+/* ========================================
+   21. SMALL DESKTOP RESPONSIVE DESIGN
+======================================== */
+
+@media (max-width: 1150px) {
+
+  .play-area {
+    grid-template-columns: 1fr;
+  }
+
+  .victory-card {
+    gap: 8px;
+  }
+
+  .game-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .personal-stats .stat-box {
     flex-direction: column;
   }
 
-  .side-panel {
-    width: 100%;
-  }
 }
 
-@media (max-width: 640px) {
+
+/* ========================================
+   22. TABLET RESPONSIVE DESIGN
+======================================== */
+
+@media (max-width: 850px) {
+
+  .game-shell {
+    grid-template-columns: 1fr;
+    max-width: 660px;
+  }
+
   .vim-app {
     padding: 16px;
   }
 
-  .game-panel {
-    padding: 16px 12px 14px;
+  .play-area {
+    grid-template-columns:
+      minmax(0, 1.8fr)
+      minmax(0, 1fr);
   }
 
-  .stats-row {
+  .game-controls {
     grid-template-columns: 1fr;
   }
 
-  .title-top,
-  .title-bottom {
-    font-size: 3rem;
+  .tile {
+    font-size: clamp(1rem, 5vw, 2rem);
+  }
+
+}
+
+
+/* ========================================
+   23. MOBILE RESPONSIVE DESIGN
+======================================== */
+
+@media (max-width: 520px) {
+
+  .vim-app {
+    padding: 10px;
+  }
+
+  .game-panel {
+    padding: 14px;
+  }
+
+  .play-area {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-row {
+    gap: 6px;
+  }
+
+  .stat-box {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stat-box > svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .board-wrapper {
+    padding: 10px;
+  }
+
+  .board {
+    gap: 6px;
+  }
+
+  .tile {
+    border-radius: 9px;
+  }
+
+  .top-actions button {
+    padding: 8px;
+    font-size: 0.8rem;
+  }
+
+  .profile-panel,
+  .leaderboard-panel {
+    padding: 12px;
+  }
+
+}
+
+
+/* ========================================
+   24. ACCESSIBILITY
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  * {
+    transition: none !important;
+  }
+
+}
+
+/* ========================================
+   25. VIEWPORT-RESPONSIVE DESKTOP LAYOUT
+======================================== */
+
+@media (min-width: 1151px) {
+  .vim-app {
+    min-height: 100dvh;
+    padding: 12px 24px;
+    align-items: center;
+  }
+
+  .game-shell {
+    gap: 20px;
+  }
+
+  .game-panel {
+    padding: 16px;
+  }
+
+  .title-wrap {
+    margin: 0 auto 12px;
+  }
+
+  .hero-title {
+    font-size: clamp(2.5rem, 6dvh, 4.5rem);
+    line-height: 0.85;
+  }
+
+  .crown {
+    font-size: clamp(1.8rem, 3.8dvh, 2.8rem);
+  }
+
+  .title-wrap p {
+    margin-top: 8px;
+    font-size: 0.75rem;
+  }
+
+  .stat-box {
+    padding: 8px;
+  }
+
+  .stat-box strong {
+    font-size: clamp(1.25rem, 3dvh, 2rem);
+  }
+
+  .game-controls {
+    margin: 10px 0 14px;
+  }
+
+  .play-area {
+    grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .board-wrapper {
+    width: 100%;
+    max-width: min(520px, 51dvh);
+    margin: 0 auto;
+    padding: 12px;
+  }
+
+  .board {
+    gap: 8px;
+  }
+
+  .tile {
+    font-size: clamp(1rem, 4dvh, 2.4rem);
+  }
+
+  .side-panel {
+    gap: 12px;
+  }
+
+  .image-card {
+    aspect-ratio: 2 / 1;
+    max-height: 25dvh;
+  }
+
+  .profile-panel,
+  .leaderboard-panel {
+    padding: 14px;
+  }
+
+  .profile-main {
+    margin-bottom: 10px;
+  }
+
+  .avatar {
+    width: 54px;
+    height: 54px;
+  }
+
+  .ranking-scroll {
+    max-height: 22dvh;
+    overflow-y: auto;
   }
 }
+
+/* ========================================
+   26. SHORT DESKTOP SCREENS
+======================================== */
+
+@media (min-width: 1151px) and (max-height: 800px) {
+  .vim-app {
+    padding: 10px 20px;
+  }
+
+  .game-panel {
+    padding: 14px;
+  }
+
+  .hero-title {
+    font-size: clamp(2rem, 5.5dvh, 3rem);
+  }
+
+  .crown {
+    font-size: 2rem;
+  }
+
+  .title-wrap {
+    margin-bottom: 10px;
+  }
+
+  .board-wrapper {
+    max-width: min(46dvh, 100%);
+    padding: 10px;
+  }
+
+  .game-controls {
+    margin: 8px 0 10px;
+  }
+
+  .victory-card {
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .big-trophy {
+    width: 60px;
+  }
+}
+
+/* ========================================
+   PREMIUM VIM PUZZLE LOGO
+======================================== */
+
+.title-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 8px auto 16px;
+    padding: 0;
+}
+
+.premium-logo {
+    display: block;
+    width: 100%;
+    max-width: 360px;
+    max-height: 180px;
+    height: auto;
+    object-fit: contain;
+
+    filter: drop-shadow(
+        0 0 12px rgba(255, 190, 40, 0.25)
+    );
+}
+
+@media (max-width: 520px) {
+    .premium-logo {
+        max-width: 260px;
+        max-height: 140px;
+    }
+}
+
+.login-form input {
+  padding: 13px 14px;
+  font-size: 1rem;
+  border-radius: 10px;
+}
+
+.login-form label {
+  font-size: 1rem;
+}
+
+.login-form .secondary-btn {
+  min-height: 46px;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.login-subtitle {
+  font-size: 1.1rem;
+  margin: 0 0 24px;
+}
+
+.login-card small {
+  font-size: 0.85rem;
+}
+
+/* ========================================
+   PREMIUM GAMING BACKGROUND
+======================================== */
+
+.vim-app,
+.auth-shell {
+    background-color: #031221;
+
+    background-image:
+        linear-gradient(
+            rgba(0, 8, 25, 0.15),
+            rgba(0, 8, 25, 0.15)
+        ),
+        url('./assets/VIM_PUZZLE_BACKGROUND.png');
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* ========================================
+   PREMIUM GOLDEN TROPHY
+======================================== */
+
+.premium-trophy {
+    display: block;
+    width: 160px;
+    max-width: 90%;
+    height: auto;
+    max-height: 150px;
+    object-fit: contain;
+    margin: 0 auto 8px;
+
+    filter: drop-shadow(
+        0 0 18px rgba(255, 193, 7, 0.35)
+    );
+
+    transition: transform 0.3s ease;
+}
+
+.premium-trophy:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 520px) {
+    .premium-trophy {
+        width: 120px;
+        max-height: 120px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .premium-trophy:hover {
+        transform: none;
+    }
+}
+
+/* ========================================
+   PREMIUM PLAYER AVATAR
+======================================== */
+
+.avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 16px;
+    border: 2px solid #5beaff;
+    overflow: hidden;
+    flex-shrink: 0;
+
+    background: #03152b;
+
+    box-shadow:
+        0 0 12px rgba(0, 223, 255, 0.6),
+        0 0 24px rgba(0, 153, 255, 0.25);
+
+    transition: transform 0.3s ease;
+}
+
+.player-avatar {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar:hover {
+    transform: scale(1.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .avatar:hover {
+        transform: none;
+    }
+}
+
+/* ========================================
+   PREMIUM LEADERBOARD
+======================================== */
+
+.leaderboard-panel table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+}
+
+.leaderboard-panel th {
+  padding: 8px;
+  color: #9ebed5;
+  font-size: 11px;
+  border-bottom: 1px solid #24516a;
+}
+
+.ranking-row {
+  background: rgba(13, 42, 61, 0.85);
+  transition: background 0.2s ease,
+              filter 0.2s ease;
+}
+
+.ranking-row:hover {
+  filter: brightness(1.25);
+}
+
+.ranking-row td {
+  padding: 10px 8px;
+  border-top: 1px solid #21475e;
+  border-bottom: 1px solid #21475e;
+  font-weight: 600;
+}
+
+.ranking-row td:first-child {
+  border-left: 1px solid #21475e;
+  border-radius: 8px 0 0 8px;
+}
+
+.ranking-row td:last-child {
+  border-right: 1px solid #21475e;
+  border-radius: 0 8px 8px 0;
+}
+
+/* Rank icons */
+
+.rank-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+}
+
+/* First place - Gold */
+
+.rank-1 {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 193, 7, 0.20),
+    rgba(255, 193, 7, 0.04)
+  );
+}
+
+.rank-1 .rank-badge,
+.rank-1 .ranking-player {
+  color: #ffd700;
+}
+
+.rank-1 .rank-badge svg {
+  filter: drop-shadow(0 0 6px #ffc107);
+}
+
+/* Second place - Silver */
+
+.rank-2 {
+  background: linear-gradient(
+    90deg,
+    rgba(192, 192, 192, 0.18),
+    rgba(192, 192, 192, 0.03)
+  );
+}
+
+.rank-2 .rank-badge,
+.rank-2 .ranking-player {
+  color: #dbe4ee;
+}
+
+/* Third place - Bronze */
+
+.rank-3 {
+  background: linear-gradient(
+    90deg,
+    rgba(205, 127, 50, 0.20),
+    rgba(205, 127, 50, 0.03)
+  );
+}
+
+.rank-3 .rank-badge,
+.rank-3 .ranking-player {
+  color: #e5a567;
+}
+
+/* Current player highlight */
+
+.leaderboard-panel tr.current-player {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 213, 255, 0.25),
+    rgba(0, 213, 255, 0.06)
+  );
+}
+
+.ranking-row.current-player td {
+  border-color: #22d3ee;
+}
+
+.ranking-player {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  overflow-wrap: anywhere;
+}
+
+.you-badge {
+  background: rgba(0, 213, 255, 0.15);
+  color: #67e8f9;
+  border: 1px solid #22d3ee;
+  border-radius: 4px;
+  padding: 2px 5px;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+/* Empty leaderboard */
+
+.ranking-empty {
+  text-align: center;
+  padding: 20px 8px;
+  color: #b8d3e5;
+  border: none;
+}
+
+.ranking-empty svg {
+  display: block;
+  margin: 0 auto 8px;
+  color: #ffd54a;
+  filter: drop-shadow(0 0 6px #b8860b);
+}
+
+.ranking-empty span {
+  display: block;
+  font-weight: 600;
+}
+
+.ranking-empty small {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  color: #89a9c0;
+}
+
+/* ========================================
+   PREMIUM VICTORY TROPHY ANIMATION
+======================================== */
+
+.victory-card.won .premium-trophy {
+  animation:
+    victoryBounce 0.8s ease-out,
+    victoryFloat 2.5s ease-in-out 0.8s infinite;
+
+  filter: drop-shadow(0 0 25px #FFD700);
+}
+
+
+/* Trophy victory bounce */
+
+@keyframes victoryBounce {
+  0% {
+    transform: scale(0.8);
+  }
+
+  50% {
+    transform: translateY(-20px) scale(1.2);
+  }
+
+  75% {
+    transform: scale(0.95);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+
+/* Floating golden trophy */
+
+@keyframes victoryFloat {
+  0%, 100% {
+    transform: translateY(0);
+    filter: drop-shadow(0 0 15px #FFD700);
+  }
+
+  50% {
+    transform: translateY(-12px) scale(1.08);
+    filter: drop-shadow(0 0 35px #FFD700);
+  }
+}
+
+
+/* Accessibility support */
+
+@media (prefers-reduced-motion: reduce) {
+  .victory-card.won .premium-trophy {
+    animation: none;
+  }
+}
+
+/* ========================================
+   END OF VIM PUZZLE STYLESHEET
+======================================== */
