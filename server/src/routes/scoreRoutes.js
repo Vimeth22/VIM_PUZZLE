@@ -22,9 +22,6 @@ const getSortedScores = async () => {
 const mongooseConnected = () => {
   const mongoose = require('mongoose');
 
-  console.log('MongoDB readyState:', mongoose.connection.readyState);
-  console.log('MongoDB database:', mongoose.connection.name);
-
   return mongoose.connection.readyState === 1;
 };
 
