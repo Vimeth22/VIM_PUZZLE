@@ -31,6 +31,7 @@ import vimPuzzleLogo from './assets/VIM_PUZZLE_LOGO.png';
 import vimPuzzleTrophy from './assets/VIM_PUZZLE_TROPHY.png';
 import vimPuzzleAvatar from './assets/VIM_PUZZLE_AVATAR.png';
 import './App.css';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
 
 /* ========================================
@@ -405,7 +406,7 @@ export default function App() {
   ====================================== */
 
   useEffect(() => {
-    fetch('/api/scores')
+    fetch(`${API_BASE_URL}/api/scores`)
 
       .then((r) => {
         if (!r.ok) {
@@ -488,7 +489,7 @@ export default function App() {
     // Submit 4 × 4 scores to the backend
 
     if (size === 4) {
-      fetch('/api/scores', {
+      fetch(`${API_BASE_URL}/api/scores`, {
         method: 'POST',
 
         headers: {
