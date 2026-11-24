@@ -1,254 +1,194 @@
-# VIM PUZZLE 
+# VIM PUZZLE
 
-A full-stack sliding puzzle game built with:
+**Slide. Solve. Win.**
 
-- **Frontend:** React + Vite
-- **Backend:** Node.js + Express
-- **Database:** MongoDB 
+A full-stack sliding puzzle game built with React, Node.js, Express and MongoDB. VIM PUZZLE combines classic number puzzles with a custom gaming interface, player statistics, victory effects and a persistent global leaderboard.
 
-This project includes:
-- Login screen before entering the game
-- 4x4 sliding number puzzle
-- Move/time tracking
-- Leaderboard (top 10)
-- Win celebration with a big **CONGRATULATIONS** message + emoji rain
-- Quit button to return to login
+![VIM PUZZLE](client/src/assets/VIM Puzzle_ Slide, Solve, Win.png)
 
----
+## Features
 
-## 1) Prerequisites
+- Three difficulty levels: 3 × 3 (Easy), 4 × 4 (Medium) and 5 × 5 (Hard).
+- Solvable randomized boards generated through legal tile movements.
+- Real-time move counter, elapsed timer and game status.
+- Player profiles and locally stored personal records.
+- Global top-10 leaderboard for 4 × 4 puzzles, ranked by fewest moves and then shortest completion time.
+- Persistent score storage using MongoDB Atlas, with an in-memory demo fallback when the database is disconnected.
+- Victory confetti, synthesized victory sound and animated golden trophy.
+- Responsive blue-and-gold interface with custom branding and reduced-motion support for victory effects.
 
-Install these first:
+## Technology Stack
 
-- **Node.js** (recommended: v18+)
-- **npm** (comes with Node.js)
-- **MongoDB** (optional, only needed for persistent leaderboard)
+| Layer | Technologies |
+| --- | --- |
+| Frontend | React, JavaScript, Vite, CSS |
+| Backend | Node.js, Express.js |
+| Database | MongoDB Atlas, Mongoose |
+| API | REST, JSON |
+| Animation and audio | canvas-confetti, CSS animations, Web Audio API |
+| Development | npm, Nodemon, Concurrently, Git, GitHub |
 
-Check versions:
+## Architecture
+
+```mermaid
+flowchart LR
+    A[React game interface] -->|HTTP / JSON| B[Express REST API]
+    B --> C[Mongoose]
+    C --> D[(MongoDB Atlas)]
+    B -. Database disconnected .-> E[In-memory scores]
+    A --> F[Local personal records]
+```
+
+The React client manages puzzle state, legal moves, timing and victory detection. Completed 4 × 4 games submit scores to the Express API. The backend stores scores through Mongoose and retrieves the ranked leaderboard from MongoDB when connected.
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js and npm (use a version supported by the project's Vite dependency)
+- Git
+- A MongoDB Atlas account and cluster, or a local MongoDB instance
+
+### 1. Clone the repository
 
 ```bash
-node -v
-npm -v
+git clone https://github.com/Vimeth22/VIM_PUZZLE.git
+cd VIM_PUZZLE
 ```
 
----
-
-## 2) Project Structure
-
-```text
-ReactN/
-├─ client/                 # React app (Vite)
-├─ server/                 # Express API
-│  ├─ index.js
-│  └─ src/
-│     ├─ models/Score.js
-│     └─ routes/scoreRoutes.js
-├─ .env.example
-├─ package.json            # Root scripts for running both client/server
-└─ README.md
-```
-
-> Note: If you see an extra folder like `server/server/`, it is not required for the main app run flow.
-
----
-
-## 3) Install Dependencies
-
-From project root:
+### 2. Install dependencies
 
 ```bash
 npm install
-cd client && npm install
-cd ../server && npm install
-cd ..
+npm --prefix client install
+npm --prefix server install
 ```
 
----
+### 3. Configure environment variables
 
-## 4) Environment Setup
-
-Create `.env` in root (or copy from `.env.example`):
+From the project root, create a local environment file:
 
 ```bash
 cp .env.example .env
 ```
 
-Then set values:
+Update `.env` with your own MongoDB connection string:
 
-```env
+```dotenv
 PORT=5001
-MONGO_URI=mongodb://127.0.0.1:27017/sliding-puzzle
+MONGO_URI=mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@YOUR_CLUSTER.mongodb.net/vim_puzzle?retryWrites=true&w=majority
 ```
 
-- `PORT`: backend server port
-- `MONGO_URI`: MongoDB connection string
+For Atlas, configure a database user and allow your development machine's IP address under Network Access. URL-encode special characters in database credentials when necessary.
 
-If `MONGO_URI` is missing/unreachable, the app still works in **demo mode** (scores saved in memory only).
+Never commit your actual `.env` file or database credentials. The `.env.example` file contains placeholders only.
 
----
-
-## 5) Run the App (Development)
-
-From root:
+### 4. Start the application
 
 ```bash
 npm run dev
 ```
 
-This starts:
-- Backend: `http://localhost:5001`
-- Frontend: `http://localhost:4175`
+| Service | URL |
+| --- | --- |
+| Frontend | http://localhost:4175 |
+| Backend | http://localhost:5001 |
+| Scores API | http://localhost:5001/api/scores |
 
-Open in browser:
-
-```text
-http://localhost:4175
-```
-
----
-
-## 6) How Login Works
-
-Current login is a simple local UI gate (no JWT/auth database yet):
-
-- Enter any **non-empty username and password**
-- Click **Login**
-- You enter the game screen
-- Click **Quit** to return to login page
-
----
-
-## 7) Available Scripts
-
-### Root (`package.json`)
+### 5. Build the frontend
 
 ```bash
-npm run dev      # run backend + frontend together
-npm run server   # run backend with nodemon
-npm run client   # run frontend (vite)
-npm run build    # build frontend for production
-npm run start    # run backend in normal mode
-```
-
-### Client (`client/package.json`)
-
-```bash
-npm run dev
+cd client
 npm run build
-npm run preview
-npm run lint
 ```
 
----
+The production frontend output is generated in `client/dist/`.
 
-## 8) API Endpoints
+## How to Play
 
-Base URL:
+1. Enter a player name using the demo login screen.
+2. Select a difficulty level.
+3. Click a numbered tile adjacent to the empty space to move it.
+4. Arrange the tiles in ascending numerical order, leaving the empty space in the bottom-right corner.
+5. Complete a 4 × 4 puzzle to submit a score to the global leaderboard.
+6. Select **Play Again** or **New Game** to start another puzzle.
 
-```text
-http://localhost:5001/api
-```
+## REST API
 
-### Health Check
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| GET | `/api/scores` | Retrieve the top 10 scores |
+| POST | `/api/scores` | Submit a completed puzzle score |
 
-```http
-GET /health
-```
+Example request body:
 
-### Get Leaderboard
-
-```http
-GET /scores
-```
-
-### Save Score
-
-```http
-POST /scores
-Content-Type: application/json
-
+```json
 {
-  "name": "Player",
-  "moves": 42,
-  "time": 120
+  "name": "PlayerOne",
+  "moves": 58,
+  "time": 126
 }
 ```
 
-#### Example with curl
+Time is measured in seconds. Scores are sorted by ascending move count, with elapsed time as the tie-breaker.
 
-```bash
-curl http://localhost:5001/api/scores
+A successful submission returns HTTP `201 Created` with the saved score and updated leaderboard. When MongoDB is disconnected, the demo fallback stores scores in server memory; these scores do not survive a server restart.
 
-curl -X POST http://localhost:5001/api/scores \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Vimeth","moves":30,"time":95}'
-```
-
----
-
-## 9) Build for Production
-
-Build frontend assets:
-
-```bash
-npm run build
-```
-
-Run backend:
-
-```bash
-npm run start
-```
-
----
-
-## 10) Troubleshooting
-
-### A) Port already in use
-
-If `4175` or `5001` is busy, stop existing processes and retry:
-
-```bash
-pkill -f "vite|nodemon|node index.js"
-npm run dev
-```
-
-### B) MongoDB connection issues
-
-- Ensure MongoDB is running locally
-- Verify `MONGO_URI` in `.env`
-- If not available, app falls back to demo mode automatically
-
-### C) Browser says connection refused
-
-- Confirm terminal shows Vite and Express started
-- Open exact frontend URL printed in terminal (normally `http://localhost:4175`)
-
----
-
-## 11) Gameplay Notes
-
-- Solve the puzzle by ordering numbers 1–15
-- Empty tile can be moved by clicking adjacent tiles
-- On solve:
-  - Big **CONGRATULATIONS!** overlay appears
-  - Emoji rain animation plays (Still working on this one)
-  - Score is posted to leaderboard
-
----
-
-## 12) GitHub
-
-Repository:
+## Project Structure
 
 ```text
-https://github.com/Vimeth22/VIM_PUZZLE
+VIM_PUZZLE/
+├── client/
+│   ├── src/
+│   │   ├── assets/          # Branding and game artwork
+│   │   ├── App.jsx          # Game logic and interface
+│   │   ├── App.css          # Component styling and animations
+│   │   └── index.css        # Global styling
+│   └── package.json
+├── server/
+│   ├── src/
+│   │   ├── models/         # Mongoose score model
+│   │   └── routes/
+│   │       └── scoreRoutes.js
+│   ├── index.js            # Server entry point
+│   └── package.json
+├── .env.example
+├── .gitignore
+├── package.json
+└── README.md
 ```
 
-To push future updates:
+## Testing and Validation
 
-```bash
-git add .
-git commit -m "your message"
-git push origin main
-```
+The following checks were performed manually during development:
+
+- Completed puzzles and verified move counts and completion times.
+- Verified victory sound and the solved-game interface.
+- Tested score submission through the REST API.
+- Confirmed game scores were stored in MongoDB Atlas.
+- Restarted the application and verified that saved scores remained visible.
+- Tested the shared leaderboard using different player names.
+- Verified leaderboard ordering by move count.
+- Successfully built the frontend with Vite.
+
+## Current Limitations and Future Improvements
+
+This project is a portfolio application. The login is demo-based rather than secure account authentication. Personal records are local to the browser, and the global leaderboard currently supports 4 × 4 puzzles only. Scores are submitted by the client and are not independently verified by the server.
+
+Planned improvements include:
+
+- Secure user registration and authentication.
+- Server-side score verification and stronger input validation.
+- Global leaderboards for every difficulty level.
+- Automated unit, integration and end-to-end tests.
+- Optimized image assets and public deployment.
+
+## Author
+
+**Vimeth Jayawardana** — Full-Stack Software Developer
+
+[GitHub](https://github.com/Vimeth22) · [Project repository](https://github.com/Vimeth22/VIM_PUZZLE)
+
+---
+
+**VIM PUZZLE — Challenge Your Mind!**
