@@ -4,7 +4,7 @@
 
 A full-stack sliding puzzle game built with React, Node.js, Express and MongoDB. VIM PUZZLE combines classic number puzzles with a custom gaming interface, player statistics, victory effects and a persistent global leaderboard.
 
-![VIM PUZZLE](client/src/assets/VIM Puzzle_ Slide, Solve, Win.png)
+![VIM PUZZLE](client/src/assets/VIM%20Puzzle_%20Slide%2C%20Solve%2C%20Win.png)
 
 ## Features
 
